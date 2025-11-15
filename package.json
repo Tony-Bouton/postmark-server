@@ -6,6 +6,7 @@
     "dev": "vercel dev"
   },
   "dependencies": {
-    "postmark": "^3.1.0"
+    "nodemailer": "^7.0.10",
+    "vercel": "^48.10.2"
   }
 }
