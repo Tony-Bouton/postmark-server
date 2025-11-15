@@ -5,7 +5,9 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
 dotenv.config();
-
+console.log("SMTP_USER:", process.env.SMTP_USER);
+console.log("SMTP_PASS:", process.env.SMTP_PASS ? "****" : "null");
+console.log("EMAIL_TO:", process.env.EMAIL_TO);
 const app = express();
 app.use(cors());
 app.use(express.json());
