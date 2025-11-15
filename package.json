@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "node api/send-email.js"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "nodemailer": "^7.0.10",
-    "vercel": "^48.10.2"
+    "vercel": "^48.10.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
