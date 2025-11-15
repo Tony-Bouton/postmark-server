@@ -1,50 +1,48 @@
+// server.js
 import express from "express";
-import nodemailer from "nodemailer";
 import cors from "cors";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-app.use(cors()); // autorise le front local
+app.use(cors());
 app.use(express.json());
 
-// Route GET pour tester le serveur
-app.get("/", (req, res) => {
-    res.send("🚀 Serveur Mail en ligne !");
-});
-
-app.post("/send-email", async (req, res) => {
+app.post("/api/send-email", async (req, res) => {
     const { name, mail, message } = req.body;
 
     if (!name || !mail || !message) {
         return res.status(400).json({ error: "Tous les champs sont requis" });
     }
-
+    console.log(process.env.SMTP_USER)
     try {
         const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT),
-            secure: process.env.SMTP_SECURE === "true",
+            host: "smtp.hostinger.com",   // ✅ serveur sortant Hostinger
+            port: 465,                     // ✅ port SSL
+            secure: true,                  // SSL
             auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS
+                user: process.env.SMTP_USER, // ton email Hostinger complet
+                pass: process.env.SMTP_PASS, // mot de passe SMTP
             },
         });
 
         await transporter.sendMail({
-            from: `"${name}" <${mail}>`,
-            to: process.env.EMAIL_TO,
-            subject: `Nouveau message de ${name}`,
+            from: 'contact@pandaru.fr',           // l'expéditeur peut être l'utilisateur
+            to: 'contact@pandaru.fr',              // email qui reçoit
+            subject: `Nouveau message de ${name} : ${mail}`,
             text: message,
-            html: `<p>${message}</p><p>De : ${mail}</p>`
         });
 
-        res.json({ message: "Email envoyé avec succès" });
+        res.status(200).json({ message: "Email envoyé avec succès" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Erreur serveur", details: err.message });
     }
 });
 
-app.listen(3000, () => console.log("API Mail running on http://localhost:3000"));
+app.get("/", (req, res) => res.send("Serveur API Mail Hostinger OK 🚀"));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
